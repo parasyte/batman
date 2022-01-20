@@ -35,6 +35,7 @@
 //! must ensure that in-range operands are provided to these instructions.
 
 // This is not actually dead code?
+// Needed because cargo check doesn;t notice we are using the constants in global_asm!()
 #![allow(dead_code)]
 
 use core::arch::global_asm;
@@ -50,11 +51,11 @@ const FCW_UNMASK: u16 = !(FCW_ZM | FCW_IM);
 const MXCSR_ZM: u32 = 1 << 9;
 /// Invalid Operation Exception Mask (SSE)
 const MXCSR_IM: u32 = 1 << 7;
-/// Zero-Divide Exception
+/// Zero-Divide Exception (SSE)
 const MXCSR_ZE: u32 = 1 << 2;
-/// Invalid Operation Exception
+/// Invalid Operation Exception (SSE)
 const MXCSR_IE: u32 = 1 << 0;
-/// Unmask (clear and enable) SSE FP exceptions
+/// Clear and unmask (enable) SSE FP exceptions
 const MXCSR_UNMASK: u32 = !(MXCSR_ZM | MXCSR_IM | MXCSR_ZE | MXCSR_IE);
 
 global_asm!(
@@ -80,5 +81,5 @@ global_asm!(
 
 extern "C" {
     /// Enable floating point exceptions on the current thread.
-    pub fn enable_fp_exceptions() -> u64;
+    pub fn enable_fp_exceptions();
 }
