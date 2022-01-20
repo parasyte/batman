@@ -35,7 +35,7 @@
 //! must ensure that in-range operands are provided to these instructions.
 
 // This is not actually dead code?
-// Needed because cargo check doesn;t notice we are using the constants in global_asm!()
+// Needed because cargo check doesn't notice we are using the constants in global_asm!()
 #![allow(dead_code)]
 
 use core::arch::global_asm;
