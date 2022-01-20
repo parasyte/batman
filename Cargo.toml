@@ -1,0 +1,22 @@
+[package]
+name = "batman"
+description = "Enable floating point exceptions with backtraces."
+version = "0.1.0"
+edition = "2021"
+authors = ["Jay Oster <jay@kodewerx.org>"]
+repository = "https://github.com/parasyte/batman"
+readme = "README.md"
+keywords = ["abort", "float", "floating-point", "nan"]
+categories = ["development tools", "game development", "hardware support", "mathematics", "science"]
+license = "MIT"
+include = [
+    "/Cargo.*",
+    "/LICENSE",
+    "/README.md",
+    "/img/batsignal.jpg",
+    "/src/**/*",
+]
+
+[dependencies]
+libc = "0.2"
+log = "0.4"
