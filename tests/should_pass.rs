@@ -2,8 +2,6 @@
 //!
 //! This just tests our assumptions that nothing fishy is happening with floating point operations.
 
-#![feature(bench_black_box)]
-
 use std::hint::black_box;
 
 #[test]
@@ -62,25 +60,31 @@ fn test_pass_sqrt() {
 }
 
 #[test]
-fn test_pass_nothing_up_our_sleeves_inf_plus_inf() {
-    unsafe { batman::signal() };
+fn test_pass_nothing_up_our_sleeves_inf_plus_inf() -> std::io::Result<()> {
+    unsafe { batman::signal()? };
 
     // Nothing up our sleeves: This won't panic!
     assert!((black_box(f32::INFINITY) + black_box(f32::INFINITY)).is_infinite());
+
+    Ok(())
 }
 
 #[test]
-fn test_pass_nothing_up_our_sleeves_finite_division() {
-    unsafe { batman::signal() };
+fn test_pass_nothing_up_our_sleeves_finite_division() -> std::io::Result<()> {
+    unsafe { batman::signal()? };
 
     // Nothing up our sleeves: This won't panic!
     assert!(black_box(20.0) / black_box(5.0) - 4.0 <= f32::EPSILON);
+
+    Ok(())
 }
 
 #[test]
-fn test_pass_nothing_up_our_sleeves_sqrt() {
-    unsafe { batman::signal() };
+fn test_pass_nothing_up_our_sleeves_sqrt() -> std::io::Result<()> {
+    unsafe { batman::signal()? };
 
     // Nothing up our sleeves: This won't panic!
     assert!(black_box(25.0_f32).sqrt() - 5.0 <= f32::EPSILON);
+
+    Ok(())
 }

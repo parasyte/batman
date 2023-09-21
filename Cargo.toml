@@ -1,7 +1,7 @@
 [package]
 name = "batman"
 description = "Enable floating point exceptions with backtraces."
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["Jay Oster <jay@kodewerx.org>"]
 repository = "https://github.com/parasyte/batman"
@@ -18,5 +18,24 @@ include = [
 ]
 
 [dependencies]
+array-macro = "2"
+backtrace = "0.3"
 libc = "0.2"
 log = "0.4"
+signal-hook-registry = "1"
+
+[target.'cfg(windows)'.dependencies.windows-sys]
+version = "0.48"
+features = [
+    # AddVectoredExceptionHandler()
+    "Win32_Foundation",
+    "Win32_System_Diagnostics_Debug",
+    "Win32_System_Kernel",
+
+    # Sleep()
+    "Win32_System_Threading",
+]
+
+[dev-dependencies]
+env_logger = "0.10"
+rusty-forkfork = "0.4"
