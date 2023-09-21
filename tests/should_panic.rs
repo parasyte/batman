@@ -1,9 +1,20 @@
-//! These test that `batman` causes panics (aborts) for some floating point operations.
+//! These test that `batman` causes panics (fatal termination of the child process) for some
+//! floating point operations.
 
 use rusty_forkfork::rusty_fork_test;
 use std::hint::black_box;
 
 rusty_fork_test! {
+    #[test]
+    fn test_sanity_check_inf_plus_inf() -> std::io::Result<()> {
+        unsafe { batman::signal()? };
+
+        // Nothing up our sleeves: This won't raise a signal!
+        assert!((black_box(f32::INFINITY) + black_box(f32::INFINITY)).is_infinite());
+
+        Ok(())
+    }
+
     #[test]
     #[should_panic]
     fn test_panic_divide_by_zero() {

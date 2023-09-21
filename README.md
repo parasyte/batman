@@ -1,9 +1,8 @@
 # Batman
 
-![Bat signal appears in the sky over Catwoman from the 1989 Batman film](./img/batsignal.jpg)
+![Bat signal appears in the sky over Catwoman from the 1992 film Batman Returns](./img/batsignal.jpg)
 
-`batman` enables FPU hardware exceptions (a per-thread configuration) and aborts the process if the
-thread performs any floating point calculation that would result in a NaN.
+`batman` enables FPU hardware exceptions (a per-thread configuration) and fatally terminates the process if the thread performs any floating point calculation that would result in a NaN. A backtrace can optionally be printed by the application itself, and of course debuggers can always catch the exception.
 
 ```rust
 fn main() -> std::io::Result<()> {
@@ -33,7 +32,7 @@ $ RUST_LOG=debug cargo run --example batman
 Floating point exception occurred.
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
 [2023-09-21T06:35:26Z DEBUG batman] Sending beacon and stopping thread...
-Aborted
+Killed
 ```
 
 This is not terribly interesting, but there is a note to set the `RUST_BACKTRACE=1` environment variable. Let's try it:
@@ -56,7 +55,7 @@ Floating point exception occurred.
 
 note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
 [2023-09-21T06:36:43Z DEBUG batman] Sending beacon and stopping thread...
-Aborted
+Killed
 ```
 
 A floating point exception is caught on line 7 in `batman.rs` in the call to `f64::sqrt()`. Use `RUST_BACKTRACE=full` for a more detailed backtrace:
@@ -121,7 +120,7 @@ Floating point exception occurred.
   15: _start
 
 [2023-09-21T06:37:20Z DEBUG batman] Sending beacon and stopping thread...
-Aborted
+Killed
 ```
 </details>
 
@@ -158,10 +157,10 @@ debug-assertions = true
 - Threads inherit floating point environment configuration from their parent.
 - There is no way to turn off exceptions, once enabled (for API simplicity).
 - `batman` requires unstable features and only works on nightly compilers.
-- Hardware floating point exceptions are unrecoverable. Thus `batman` aborts when the exception is trapped. It cannot be made into an unwinding panic.
+- Hardware floating point exceptions are unrecoverable. Thus `batman` raises a fatal `SIGKILL` signal (on unix-like OSes) or `FailFast` (on Windows) when the exception is handled. It cannot be caught, and it cannot be made into an unwinding panic. Destructors are not called, and this can lead to resource leaks in some situations.
 - The signal handler should be able to safely get the thread ID, it's just additional state that I haven't captured yet. Could be useful for log correlations in some multi-threaded apps.
 - Only `x86_64` is supported at present, and only Windows, Linux, and macOS have been tested.
-- On Windows, the error message from Cargo will say `"exit code: 0xc0000409, STATUS_STACK_BUFFER_OVERRUN"`. This is normal behavior for `abort`. See: https://devblogs.microsoft.com/oldnewthing/20190108-00/?p=100655
+- Backtrace printing is subject to deadlocks (this is the nature of unrecoverable exceptions). The signal handler will wait up to 3 seconds for the backtrace thread to finish processing stack frames, but the process always unconditionally terminates fairly quickly.
 
 
 ## Why is it named `batman`?

@@ -63,7 +63,7 @@ fn test_pass_sqrt() {
 fn test_pass_nothing_up_our_sleeves_inf_plus_inf() -> std::io::Result<()> {
     unsafe { batman::signal()? };
 
-    // Nothing up our sleeves: This won't panic!
+    // Nothing up our sleeves: This won't raise a signal!
     assert!((black_box(f32::INFINITY) + black_box(f32::INFINITY)).is_infinite());
 
     Ok(())
@@ -73,7 +73,7 @@ fn test_pass_nothing_up_our_sleeves_inf_plus_inf() -> std::io::Result<()> {
 fn test_pass_nothing_up_our_sleeves_finite_division() -> std::io::Result<()> {
     unsafe { batman::signal()? };
 
-    // Nothing up our sleeves: This won't panic!
+    // Nothing up our sleeves: This won't raise a signal!
     assert!(black_box(20.0) / black_box(5.0) - 4.0 <= f32::EPSILON);
 
     Ok(())
@@ -83,7 +83,7 @@ fn test_pass_nothing_up_our_sleeves_finite_division() -> std::io::Result<()> {
 fn test_pass_nothing_up_our_sleeves_sqrt() -> std::io::Result<()> {
     unsafe { batman::signal()? };
 
-    // Nothing up our sleeves: This won't panic!
+    // Nothing up our sleeves: This won't raise a signal!
     assert!(black_box(25.0_f32).sqrt() - 5.0 <= f32::EPSILON);
 
     Ok(())

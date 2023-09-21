@@ -1,6 +1,6 @@
 //! Per-thread tests
 
-use std::{any::Any, hint::black_box, thread};
+use std::{any::Any, hint::black_box, thread, time::Duration};
 
 #[test]
 fn test_pass_per_thread_sync_zero_div_zero() -> Result<(), Box<dyn Any + Send>> {
@@ -17,6 +17,8 @@ fn test_pass_per_thread_sync_zero_div_zero() -> Result<(), Box<dyn Any + Send>> 
 #[test]
 fn test_pass_per_thread_racy_zero_div_zero() -> Result<(), Box<dyn Any + Send>> {
     let handle = thread::spawn(|| {
+        thread::sleep(Duration::from_millis(100));
+
         unsafe { batman::signal().unwrap() };
     });
 

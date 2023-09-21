@@ -28,6 +28,7 @@ signal-hook-registry = "1"
 version = "0.48"
 features = [
     # AddVectoredExceptionHandler()
+    # RaiseFailFastException()
     "Win32_Foundation",
     "Win32_System_Diagnostics_Debug",
     "Win32_System_Kernel",
